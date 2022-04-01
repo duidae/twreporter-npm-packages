@@ -10,6 +10,7 @@ export default {
     'https://twreporter.us14.list-manage.com/subscribe/post?u=4da5a7d3b98dbc9fdad009e7e&id=e0eb0c8c32',
   medium: 'https://medium.com/twreporter',
   twitter: 'https://twitter.com/tw_reporter_org',
+  telegram: 'https://t.me/tw_reporter_org',
   IJMBrochureDownloadLink:
     'https://docs.google.com/forms/d/e/1FAIpQLSd0KW2gaBI0oXr1W-emtLEL6XXKQkLjB1lu1XMVmoYVbincug/viewform',
 }

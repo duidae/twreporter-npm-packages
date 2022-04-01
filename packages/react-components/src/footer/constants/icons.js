@@ -17,6 +17,11 @@ const iconList = [
     target: '_blank',
   },
   {
+    slug: 'telegram',
+    link: externalLinks.telegram,
+    target: '_blank',
+  },
+  {
     slug: 'medium',
     link: externalLinks.medium,
     target: '_blank',

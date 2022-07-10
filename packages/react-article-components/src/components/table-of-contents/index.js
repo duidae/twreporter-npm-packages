@@ -81,6 +81,7 @@ class TableOfContents extends React.PureComponent {
         <TOC.React.TableOfContents
           className={className}
           manager={manager}
+          smoothScrollDuration={50} // Shorter duration avoids loading embeds during smooth scroll
           render={(anchors, highlightAnchor, handleAnchorClick) => {
             const anchorsJSX = _.map(anchors, anchor => {
               const toHighlight = anchor === highlightAnchor

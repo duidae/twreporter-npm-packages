@@ -334,7 +334,7 @@ class Anchor extends React.PureComponent {
   }
 }
 
-const smoothScrollDuration = 500
+const smoothScrollDuration = 50
 
 class TableOfContents extends React.PureComponent {
   static propTypes = {

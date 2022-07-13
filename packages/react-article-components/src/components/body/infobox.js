@@ -2,6 +2,7 @@ import mq from '@twreporter/core/lib/utils/media-query'
 import PropTypes from 'prop-types'
 import predefinedPropTypes from '../../constants/prop-types/body'
 import React, { PureComponent } from 'react'
+import smoothScroll from 'smoothscroll'
 import cssConsts from '../../constants/css'
 import styled, { css } from 'styled-components'
 import themeConst from '../../constants/theme'
@@ -128,6 +129,27 @@ const Container = styled.div`
   }
 `
 
+// NOTE:
+// In order to scroll quickly to avoid triggering embeds loading,
+// here we apply a custom duration of smooth scroll effect to internal anchors inside infobox.
+const smoothScrollDuration = 50
+const customSmoothScrollFuncName = 'twreporterSmoothScroll'
+const customSmoothScrollScript = `
+  <script type='text/javascript'>
+    const ${customSmoothScrollFuncName} = function(e) {
+      e.preventDefault();
+      const id = e.target.hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        ${smoothScroll.name}(element, ${smoothScrollDuration}, function (el) {
+          location.replace('#' + el.id)
+          // this will cause the :target to be activated.
+        });
+      }
+    }
+  </script>
+`
+
 export default class Infobox extends PureComponent {
   static propTypes = {
     className: PropTypes.string,
@@ -142,10 +164,35 @@ export default class Infobox extends PureComponent {
     const { className, data } = this.props
     const contentHtmlString = _.get(data, ['content', 0, 'body'], '')
     const title = _.get(data, ['content', 0, 'title'], '')
-    return contentHtmlString ? (
+
+    // Legacy <a> tags inside infobox contain target="_blank" prop,
+    // so that a new tab is opened when an anchor is clicked, we need to
+    // replace those props of internal anchors with a custom smooth scroll.
+    const anchorRegex = /<a[^>]*>/g
+    const fixedContentHtmlString = contentHtmlString?.replace(
+      anchorRegex,
+      anchorString => {
+        const hashRegex = /href="#/ // TODO: href={"#"}
+        const newTabRegex = /target="_blank"/ // TODO: target={"_blank"}
+        return hashRegex.exec(anchorString) && newTabRegex.exec(anchorString)
+          ? anchorString.replace(
+              newTabRegex,
+              `onclick="${customSmoothScrollFuncName}(event)"`
+            )
+          : anchorString
+      }
+    )
+
+    console.log(customSmoothScrollScript)
+
+    return fixedContentHtmlString ? (
       <Container className={className}>
         {title ? <Title>{title}</Title> : null}
-        <Content dangerouslySetInnerHTML={{ __html: contentHtmlString }} />
+        <Content
+          dangerouslySetInnerHTML={{
+            __html: customSmoothScrollScript + fixedContentHtmlString,
+          }}
+        />
       </Container>
     ) : null
   }

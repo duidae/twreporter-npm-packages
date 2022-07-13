@@ -140,9 +140,9 @@ const customSmoothScrollScript = `
       e.preventDefault();
       const id = e.target.hash.substring(1);
       const element = document.getElementById(id);
-      const smoothScroll = ${smoothScroll.toString()};
+      const customeSmoothScroll = ${smoothScroll.toString()};
       if (element) {
-        smoothScroll(element, ${smoothScrollDuration}, function (el) {
+        customeSmoothScroll(element, ${smoothScrollDuration}, function (el) {
           location.replace('#' + el.id)
           // this will cause the :target to be activated.
         });
